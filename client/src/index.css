@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+    --color-background-dark: #0f172a;
+    --color-background-light: #FFFFFF;
+    --color-text-dark: #FFFFFF;
+    --color-text-light: #0f172a;
+}
+
+@layer {
+    body {
+        font-size: 16px;
+        font-family: "Open Sans", sans-serif;
+        line-height: 1.5;
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    html {
+        transition: all .4s ease;
+    }
+
+    html[data-theme='light'] {
+        background-color: var(--color-background-light);
+        color: var(--color-text-light);
+    }
+
+    html[data-theme='dark'] {
+        background-color: var(--color-background-dark);
+        color: var(--color-text-dark);
+    }
+}

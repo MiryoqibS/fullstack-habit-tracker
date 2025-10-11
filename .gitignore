@@ -1,0 +1,71 @@
+# --- ОС / Системные ---
+.DS_Store
+Thumbs.db
+
+# --- Node.js ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Environment (секреты, токены и т.д.) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Логи ---
+logs
+*.log
+logs/*
+debug.log
+error.log
+
+# --- Сборка фронтенда ---
+build/
+dist/
+coverage/
+.cache/
+out/
+.next/
+.vite/
+
+# --- IDE и редакторы ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Тесты ---
+jest-coverage/
+coverage/
+*.test.js
+*.spec.js
+
+# --- Бэкенд / Express ---
+uploads/
+tmp/
+public/uploads/
+__pycache__/
+*.pid
+*.seed
+
+# --- MongoDB / Data ---
+*.db
+*.db-journal
+dump/
+data/
+
+# --- React specific ---
+*.env.local
+*.env.development.local
+*.env.production.local
+*.env.test.local
+
+# --- Misc ---
+*.tgz
+*.zip
+*.tar.gz
+*.pem
