@@ -5,6 +5,12 @@ import { ApiError } from "../errors/ApiError.js";
 import { UserModel } from "../models/User.model.js";
 import { mailService } from "./mail.service.js";
 import { tokenService } from "./token.service.js";
+import path from "path";
+import fs from "fs/promises";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class UserService {
     // == Регистрация пользователя ==
@@ -128,6 +134,38 @@ class UserService {
             { $set: filteredFields },
             { new: true },
         );
+    }
+
+    // == Обновление фото профиля ==
+    async updateAvatar(userId, file) {
+        if (!userId) throw ApiError.UnauthorizedError();
+        if (!file) throw ApiError.BadRequestError("файл не был передан");
+
+        const user = await UserModel.findById(userId);
+        const oldFilename = user.avatarUrl.split("/uploads/")[1];
+        const oldPath = path.join(__dirname, "../uploads/avatars", oldFilename);
+
+        // Удаление старого фото профиля
+        if (oldFilename !== "default.webp") {
+            try {
+                await fs.access(oldPath);
+                await fs.unlink(oldPath);
+            } catch (error) {
+                if (error.code !== "ENOENT") {
+                    throw ApiError.BadRequestError("не удалось удалить старое фото профиля");
+                };
+            };
+        };
+
+        // обновление документа профиля
+        const avatarUrl = `${ENV.API_URL}/api/uploads/${file.filename}`;
+        user.avatarUrl = avatarUrl;
+        await user.save();
+
+        return {
+            avatarUrl,
+            user: user.toObject(),
+        };
     }
 };
 

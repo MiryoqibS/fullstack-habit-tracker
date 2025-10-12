@@ -162,6 +162,23 @@ class UserController {
             next(error);
         };
     }
+
+    // == Обновление фото профиля ==
+    async updateAvatar(req, res, next) {
+        try {
+            const userId = req.user.id;
+            const file = req.file;
+            const { avatarUrl, user } = await userService.updateAvatar(userId, file);
+            return res.status(200).json({
+                success: true,
+                message: "фото профиля было успешно обновлено",
+                avatarUrl,
+                user,
+            });
+        } catch (error) {
+            next(error);
+        };
+    }
 }
 
 export const userController = new UserController();

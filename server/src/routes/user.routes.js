@@ -2,6 +2,7 @@ import { Router } from "express";
 import { userController } from "../controllers/user.controller.js";
 import { body } from "express-validator";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { uploadAvatarImageMiddleware } from "../middlewares/uploadAvatarImage.middleware.js";
 
 // == Роутер для запросов пользователей (система аккаунтов) ==
 export const userRouter = Router();
@@ -16,6 +17,7 @@ GET /verify/:code (подтверждения аккаунта)
 PUT /profile/avatar (изменение фото профиля) -
 PUT /update (изменение данных пользователя)
 GET /users (получение списка пользователей)
+POST /profile/avatar (обновление фото профиля)
 */
 
 userRouter.post("/register",
@@ -38,3 +40,8 @@ userRouter.post("/logout", userController.logout);
 userRouter.get("/verify/:code", userController.verify);
 userRouter.get("/users", authMiddleware, userController.getUsers);
 userRouter.put("/update", authMiddleware, userController.updateUser);
+userRouter.post("/profile/avatar",
+    authMiddleware,
+    uploadAvatarImageMiddleware.single("avatar"),
+    userController.updateAvatar
+);

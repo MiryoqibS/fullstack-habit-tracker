@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { authContext } from "../contexts/authContext";
-import { CheckIcon, PenIcon } from "lucide-react";
+import { CheckIcon, ImageUpIcon, PenIcon } from "lucide-react";
 import { Input } from "./UI/Input";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/axios";
@@ -14,6 +14,7 @@ export const AccountForm = () => {
     const navigate = useNavigate();
 
     const bioInputRef = useRef(null);
+    const fileInputRef = useRef(null);
     const usernameInputRef = useRef(null);
 
     // == Защита от не авторизированного пользователя ==
@@ -31,6 +32,7 @@ export const AccountForm = () => {
     if (isLoading) return (<p>Идёт загрузка...</p>);
     if (!user) return (<p>Ошибка авторизации</p>);
 
+    // == Обновление данных пользователя ==
     const handleUpdateProfile = async () => {
         if (JSON.stringify(user) === JSON.stringify(profile)) return;
 
@@ -51,16 +53,52 @@ export const AccountForm = () => {
         };
     };
 
+    // == Обновление фото профиля ==
+    const handleUpdateAvatar = async (file) => {
+        try {
+            const formData = new FormData();
+            formData.append("avatar", file);
+            const { data } = await api.post("/profile/avatar", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            const newUser = { ...profile, avatarUrl: data.avatarUrl };
+            setProfile(newUser);
+        } catch (error) {
+            console.log(error);
+        };
+    };
+
     if (isUpdating) return <p className="text-blue-600 font-medium text-xs">Идёт загрузка...</p>
 
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center gap-4">
-                <img
-                    className="w-24 h-24 rounded-full"
-                    src={profile.avatarUrl}
-                    alt={`фото профиля ${profile.username}`}
-                />
+                <div
+                    onClick={() => fileInputRef.current.click()}
+                    className="relative flex items-center justify-center group cursor-pointer"
+                >
+                    <img
+                        className="w-24 h-24 rounded-full transition-opacity group-hover:opacity-80"
+                        src={profile.avatarUrl}
+                        alt={`фото профиля ${profile.username}`}
+                    />
+                    <ImageUpIcon size={16} className="
+                    color-gray-900 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                    transition-opacity opacity-0 group-hover:opacity-100"
+                    />
+                    {/* не видимый input для выбора фото */}
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => handleUpdateAvatar(e.target.files[0])}
+                    />
+                </div>
+
                 <div className="flex flex-col items-start gap-1 group">
                     {isUsernameEditing ? (
                         <div className="flex-1 flex gap-2">
