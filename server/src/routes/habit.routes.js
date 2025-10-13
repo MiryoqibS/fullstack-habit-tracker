@@ -17,3 +17,4 @@ habitRouter.get("/habits", authMiddleware, habitController.getHabits);
 habitRouter.get("/habits/today", authMiddleware, habitController.getTodayHabits);
 habitRouter.get("/habits/stats", authMiddleware, habitController.getWeekStats);
 habitRouter.get("/habits/:id", habitController.getHabitById);
+habitRouter.delete("/habits/:id", habitController.deleteHabit);

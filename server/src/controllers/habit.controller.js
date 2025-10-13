@@ -78,6 +78,22 @@ class HabitController {
             next(error);
         }
     }
+
+    // == Удаление привычки ==
+    async deleteHabit(req, res, next) {
+        try {
+            const habitId = req.params.id;
+            const deletedHabit = await habitService.deleteHabit(habitId);
+
+            return res.status(200).json({
+                success: true,
+                message: "привычка успешно удалена",
+                habit: deletedHabit.toObject(),
+            });
+        } catch (error) {
+            next(error);
+        };
+    }
 }
 
 export const habitController = new HabitController();

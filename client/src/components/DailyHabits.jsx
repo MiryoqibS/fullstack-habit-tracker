@@ -1,31 +1,20 @@
-import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react'
-import { api } from '../api/axios';
+import React, { useContext } from 'react'
+import { HabitsList } from './HabitsList';
+import { Loader } from './Loader';
+import { habitsContext } from "../contexts/habitsContext";
 
 export const DailyHabits = () => {
-    const [habits, setHabits] = useState([]);
-
-    useEffect(() => {
-        const fetchHabits = async () => {
-            const { data } = await api.get("/habits/today");
-            setHabits(data.habits);
-        };
-        fetchHabits();
-    }, []);
-
+    const { habits, isLoading, handleDeleteHabit } = useContext(habitsContext);
+    if (isLoading) return <Loader />
     if (habits.length === 0) return "привычек на сегодня нет...";
 
     return (
-        <div>
-            {habits.map((habit) => (
-                <div
-                    key={habit.id}
-                    className=''
-                >
-                    <p>{habit.title}</p>
-                </div>
-            ))}
+        <div className="flex flex-col items-start gap-4">
+            <h3 className="text-2xl">Сегодняшние привычки</h3>
+            <HabitsList
+                habits={habits}
+                deleteHabit={handleDeleteHabit}
+            />
         </div>
     );
 };

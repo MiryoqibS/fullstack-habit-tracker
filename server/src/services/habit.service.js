@@ -40,7 +40,7 @@ class HabitService {
         for (let i = 0; i < 7; i++) {
             const day = new Date(monday);
             day.setDate(monday.getDate() + i);
-
+            const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чг", "Пт", "Сб"];
             const dayOfWeek = day.getDay();
             const totalHabits = habits.filter(habit => habit.daysOfWeek.includes(dayOfWeek)).length;
             const habitsCompleted = logs.filter(
@@ -51,6 +51,7 @@ class HabitService {
 
             weekStats.push({
                 day: day.getDate(),
+                weekday: weekdays[day.getDay()],
                 totalHabits,
                 habitsCompleted,
             });
@@ -79,6 +80,13 @@ class HabitService {
         const habit = await HabitModel.findById(id);
         if (!habit) throw ApiError.BadRequestError("привычка по такому идентификатору не был найден");
         return habit;
+    }
+
+    // == Удаление привычки по идентификатору ==
+    async deleteHabit(id) {
+        if (!id) throw ApiError.BadRequestError("не валидный идентификатор привычки");
+        const deletedHabit = await HabitModel.findByIdAndDelete(id);
+        return deletedHabit;
     }
 };
 

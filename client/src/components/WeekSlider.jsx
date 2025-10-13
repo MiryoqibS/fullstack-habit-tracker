@@ -12,9 +12,10 @@ export const WeekSlider = () => {
                 setIsLoading(true);
                 const { data } = await api.get("/habits/stats");
                 setDays(data.stats);
+                console.log(data.stats);
+
             } catch (error) {
                 console.log(`Произошла ошибка при получении статистки недели: ${error.message}`);
-
             } finally {
                 setIsLoading(false);
             }
@@ -28,7 +29,7 @@ export const WeekSlider = () => {
     return (
         <div className="flex gap-4 overflow-x-auto px-2 py-3 no-scrollbar">
             {days.map((day) => {
-                const progress = (day.habitsCompleted / day.totalHabits) * 100;
+                const progress = day.totalHabits === 0 ? 0 : (day.habitsCompleted / day.totalHabits) * 100;
                 const isActive = day.day === selectedDay;
 
                 return (
@@ -66,7 +67,14 @@ export const WeekSlider = () => {
                                 </linearGradient>
                             </defs>
                         </svg>
-                        <span className="z-10 text-sm font-medium">{day.day}</span>
+                        <div className="z-10 flex flex-col items-center justify-center">
+                            <span className="text-sm font-medium">
+                                {day.day}
+                            </span>
+                            <span className="text-xs">
+                                {day.weekday}
+                            </span>
+                        </div>
                     </button>
                 )
             })}

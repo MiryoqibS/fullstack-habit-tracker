@@ -29,7 +29,11 @@ const HabitSchema = new mongoose.Schema({
     logs: [{
         date: { type: Date, required: true },
         isCompleted: { type: Boolean, default: true }
-    }]
+    }],
+    isStarred: {
+        type: Boolean,
+        default: false,
+    }
 }, {
     timestamps: true,
     toObject: {
