@@ -5,6 +5,7 @@ import { api } from "../api/axios";
 export const HabitProvider = ({ children }) => {
     const [habits, setHabits] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [filter, setFilter] = useState("all");
 
     useEffect(() => {
         const fetchHabits = async () => {
@@ -32,8 +33,63 @@ export const HabitProvider = ({ children }) => {
         };
     };
 
+    const handleStarHabit = async (id) => {
+        const updatedHabits = habits.map(
+            (habit) => habit.id === id ?
+                { ...habit, isStarred: !habit.isStarred }
+                :
+                habit
+        );
+        setHabits(updatedHabits);
+
+        try {
+            await api.post(`/habits/${id}/star`);
+        } catch (error) {
+            console.log(`Произошла ошибка при отметки привычки как избранную: ${error.message}`);
+        }
+    };
+
+    const handleUpdateHabit = async (id, updatedFields) => {
+        const updatedHabits = habits.map(
+            (habit) => habit.id === id ?
+                { ...habit, ...updatedFields }
+                :
+                habit
+        );
+        setHabits(updatedHabits);
+
+        try {
+            await api.put(`/habits/${id}`, updatedFields);
+        } catch (error) {
+            console.log(`Произошла ошибка при обновлении привычки: ${error.message}`);
+        }
+    }
+
+    const getFilteredHabits = () => {
+        switch (filter) {
+            case "all":
+                return habits;
+            case "starred":
+                return habits.filter(habit => habit.isStarred);
+            case "oldest":
+                return [...habits].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+            case "newest":
+                return [...habits].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            default:
+                return habits;
+        }
+    };
+
     return (
-        <habitsContext.Provider value={{ habits, isLoading, handleDeleteHabit }}>
+        <habitsContext.Provider value={{
+            isLoading,
+            filter,
+            setFilter,
+            getFilteredHabits,
+            handleDeleteHabit,
+            handleStarHabit,
+            handleUpdateHabit,
+        }}>
             {children}
         </habitsContext.Provider>
     )

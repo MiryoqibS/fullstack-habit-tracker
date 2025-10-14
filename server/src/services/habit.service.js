@@ -88,6 +88,38 @@ class HabitService {
         const deletedHabit = await HabitModel.findByIdAndDelete(id);
         return deletedHabit;
     }
+
+    // == Отметить привычку как избранную ==
+    async toggleStarHabit(id) {
+        if (!id) throw ApiError.BadRequestError("не валидный идентификатор привычки");
+        const habit = await HabitModel.findById(id);
+        if (!habit) throw ApiError.BadRequestError("привычка не была найдена");
+        habit.isStarred = !habit.isStarred;
+        await habit.save();
+        return habit;
+    }
+
+    // == Обновление данных привычки ==
+    async updateHabit(id, updatedFields) {
+        if (!id) throw ApiError.BadRequestError("не валидный идентификатор привычки");
+        if (!updatedFields) throw ApiError.BadRequestError("не валидные поля привычки");
+
+        const allowedFields = ["title", "description", "daysOfWeek"];
+        const filteredFields = {};
+
+        for (const key in updatedFields) {
+            const value = updatedFields[key];
+            if (allowedFields.includes(key)) {
+                filteredFields[key] = value;
+            };
+        }
+
+        const habit = await HabitModel.findByIdAndUpdate(id, filteredFields, {
+            new: true
+        });
+
+        return habit.toObject();
+    }
 };
 
 export const habitService = new HabitService();

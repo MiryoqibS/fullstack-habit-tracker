@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react'
 
-export const Input = ({ value, onChange, type = "text", placeholder = "...", className = "", validation = () => ({ isValid: true, errorMessage: "" }), ...props }) => {
+export const Input = ({
+    value,
+    onChange,
+    type = "text",
+    placeholder = "...",
+    className = "",
+    validation = () => ({ isValid: true, errorMessage: "" }),
+    ...props
+}) => {
     const [isValid, setIsValid] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         console.log(isValid);
-
     }, [isValid]);
 
     return (

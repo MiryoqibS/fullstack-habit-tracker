@@ -94,6 +94,40 @@ class HabitController {
             next(error);
         };
     }
+
+    // == Отметить привычку как избранную ==
+    async toggleStarHabit(req, res, next) {
+        try {
+            const habitId = req.params.id;
+            const starredHabit = await habitService.toggleStarHabit(habitId);
+
+            return res.status(200).json({
+                success: true,
+                message: "привычка успешно сделано избранной",
+                habit: starredHabit.toObject(),
+            });
+        } catch (error) {
+            next(error);
+        };
+    }
+
+    // == Обновление данных привычки ==
+    async updateHabit(req, res, next) {
+        try {
+            const habitId = req.params.id;
+            console.log(req.body);
+            
+            const updatedHabit = await habitService.updateHabit(habitId, req.body);
+            
+            return res.status(200).json({
+                success: true,
+                message: "привычка успешно обновлена",
+                habit: updatedHabit,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export const habitController = new HabitController();

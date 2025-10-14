@@ -1,7 +1,7 @@
 import React from "react";
 import { HabitItem } from "./HabitItem";
 
-export const HabitsList = ({ habits, deleteHabit }) => {
+export const HabitsList = ({ habits, deleteHabit, starHabit, updateHabit }) => {
     return (
         <div className="flex flex-col w-full gap-2">
             {habits.map((habit) => (
@@ -9,6 +9,8 @@ export const HabitsList = ({ habits, deleteHabit }) => {
                     key={habit.id}
                     habit={habit}
                     deleteHabit={deleteHabit}
+                    starHabit={starHabit}
+                    updateHabit={updateHabit}
                 />
             ))}
         </div>
