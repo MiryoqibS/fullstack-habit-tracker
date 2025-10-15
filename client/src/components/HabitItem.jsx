@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { HabitEditForm } from "./HabitEditForm";
 import { HabitView } from "./HabitView";
 
-export const HabitItem = ({ habit, deleteHabit, starHabit, updateHabit }) => {
+export const HabitItem = ({ habit, deleteHabit, starHabit, updateHabit, completeHabit, weekday }) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const handleUpdateHabit = async (updatedHabit) => {
@@ -13,7 +13,7 @@ export const HabitItem = ({ habit, deleteHabit, starHabit, updateHabit }) => {
         } catch (error) {
             console.log(`Произошла ошибка при обновлении задачи: ${error.message}`);
         };
-    }
+    };
 
     return isEditing ?
         <HabitEditForm
@@ -26,5 +26,7 @@ export const HabitItem = ({ habit, deleteHabit, starHabit, updateHabit }) => {
             deleteHabit={deleteHabit}
             starHabit={starHabit}
             editHabit={() => setIsEditing(true)}
+            completeHabit={completeHabit}
+            weekday={weekday}
         />;
 }

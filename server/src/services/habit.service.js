@@ -40,7 +40,6 @@ class HabitService {
         for (let i = 0; i < 7; i++) {
             const day = new Date(monday);
             day.setDate(monday.getDate() + i);
-            const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чг", "Пт", "Сб"];
             const dayOfWeek = day.getDay();
             const totalHabits = habits.filter(habit => habit.daysOfWeek.includes(dayOfWeek)).length;
             const habitsCompleted = logs.filter(
@@ -51,7 +50,7 @@ class HabitService {
 
             weekStats.push({
                 day: day.getDate(),
-                weekday: weekdays[day.getDay()],
+                weekday: day.getDay(),
                 totalHabits,
                 habitsCompleted,
             });
@@ -117,6 +116,49 @@ class HabitService {
         const habit = await HabitModel.findByIdAndUpdate(id, filteredFields, {
             new: true
         });
+
+        return habit.toObject();
+    }
+
+    // == Получение привычек по дню недели ==
+    async getHabitsByWeekday(userId, weekday) {
+        if (!userId) throw ApiError.UnauthorizedError();
+        if (weekday < 0 || weekday > 6) throw ApiError.BadRequestError("не валидный день недели");
+
+        const habits = await HabitModel.find({
+            user: userId,
+            daysOfWeek: { $in: [weekday] },
+        });
+
+        return habits.map(habit => habit.toObject());
+    };
+
+    // == Отметить привычку как выполненную ==
+    async completeHabit(userId, habitId) {
+        if (!userId) throw ApiError.UnauthorizedError();
+        if (!habitId) throw ApiError.BadRequestError("не валидный идентификатор привычки");
+
+        const habit = await HabitModel.findOne({
+            _id: habitId,
+            user: userId,
+        });
+
+        if (!habit) throw ApiError.BadRequestError("привычка не была найдена");
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (!habit.daysOfWeek.includes(today.getDay())) throw ApiError.BadRequestError("привычку нельзя ответить так как она не добавлена в этот день недели");
+
+        const alreadyLogged = habit.logs.some(log => {
+            const loggedDate = new Date(log);
+            loggedDate.setHours(0, 0, 0, 0);
+            return loggedDate.getTime() === today.getTime();
+        });
+
+        if (alreadyLogged) throw ApiError.BadRequestError("привычка уже выполнена сегодня");
+        habit.logs.push(new Date());
+
+        await habit.save();
 
         return habit.toObject();
     }

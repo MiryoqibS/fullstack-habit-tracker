@@ -116,13 +116,46 @@ class HabitController {
         try {
             const habitId = req.params.id;
             console.log(req.body);
-            
+
             const updatedHabit = await habitService.updateHabit(habitId, req.body);
-            
+
             return res.status(200).json({
                 success: true,
                 message: "привычка успешно обновлена",
                 habit: updatedHabit,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // == Получение привычек определённого дня недели ==
+    async getHabitsByWeekday(req, res, next) {
+        try {
+            const userId = req.user.id;
+            const weekday = req.params.weekday;
+            const habits = await habitService.getHabitsByWeekday(userId, Number(weekday));
+
+            return res.status(200).json({
+                success: true,
+                habits,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // == Отметить привычку как выполненную ==
+    async completeHabit(req, res, next) {
+        try {
+            const habitId = req.params.id;
+            const userId = req.user.id;
+            const completedHabit = await habitService.completeHabit(userId, habitId);
+
+            return res.status(200).json({
+                success: true,
+                message: "привычка успешно изменена на статус 'выполнена'",
+                habit: completedHabit,
             });
         } catch (error) {
             next(error);

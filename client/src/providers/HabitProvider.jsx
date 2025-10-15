@@ -6,12 +6,16 @@ export const HabitProvider = ({ children }) => {
     const [habits, setHabits] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [filter, setFilter] = useState("all");
+    const [weekday, setWeekday] = useState(new Date().getDay());
 
     useEffect(() => {
+        console.log(weekday);
+
         const fetchHabits = async () => {
             setIsLoading(true);
             try {
-                const { data } = await api.get("/habits");
+                const { data } = await api.get(`/habits/day/${weekday}`);
+
                 setHabits(data.habits);
             } catch (error) {
                 console.log(`Произошла ошибка при получении привычек: ${error.message}`);
@@ -20,7 +24,7 @@ export const HabitProvider = ({ children }) => {
             }
         };
         fetchHabits();
-    }, []);
+    }, [weekday]);
 
     const handleDeleteHabit = async (id) => {
         const updatedHabits = habits.filter(habit => habit.id !== id);
@@ -30,6 +34,22 @@ export const HabitProvider = ({ children }) => {
             await api.delete(`/habits/${id}`);
         } catch (error) {
             console.log(`Произошла ошибка при удалении привычки: ${error.message}`);
+        };
+    };
+
+    const handleCompleteHabit = async (id) => {
+        const updatedHabits = habits.map((habit) => {
+            if (habit.id === id) {
+                return { ...habit, logs: [...habit.logs, new Date()] }
+            };
+            return habit;
+        });
+        setHabits(updatedHabits);
+
+        try {
+            await api.post(`/habits/${id}/complete`);
+        } catch (error) {
+            console.log(`Произошла ошибка при отметки задачу как выпоенная: ${error.message}`);
         };
     };
 
@@ -84,11 +104,14 @@ export const HabitProvider = ({ children }) => {
         <habitsContext.Provider value={{
             isLoading,
             filter,
+            weekday,
             setFilter,
+            setWeekday,
             getFilteredHabits,
             handleDeleteHabit,
             handleStarHabit,
             handleUpdateHabit,
+            handleCompleteHabit,
         }}>
             {children}
         </habitsContext.Provider>

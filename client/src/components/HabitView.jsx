@@ -3,7 +3,14 @@ import { Modal } from "./Modal";
 import { CheckIcon, PenIcon, StarIcon, TrashIcon, ViewIcon } from "lucide-react";
 import { Tooltip } from "./UI/Tooltip";
 
-export const HabitView = ({ habit, deleteHabit, starHabit, editHabit }) => {
+export const HabitView = ({
+    habit,
+    deleteHabit,
+    starHabit,
+    editHabit,
+    completeHabit,
+    weekday
+}) => {
     const [showViewTooltip, setShowViewTooltip] = useState(false);
     const [showCheckTooltip, setShowCheckTooltip] = useState(false);
     const [showStarTooltip, setShowStarTooltip] = useState(false);
@@ -22,7 +29,14 @@ export const HabitView = ({ habit, deleteHabit, starHabit, editHabit }) => {
         bg-white rounded-xl p-1 cursor-pointer shadow-lg
         transition-colors hover:text-indigo-600
         dark:bg-gray-800 dark:text-gray-300
-        dark:hover:text-gray-400 dark:hover:bg-indigo-900/30`;
+        dark:hover:text-gray-400 dark:hover:bg-indigo-900/30
+        disabled:cursor-not-allowed disabled:opacity-50`;
+
+    const todayCompleted = habit.logs.some(log => {
+        const logDate = new Date(log).toISOString().split("T")[0];
+        const today = new Date().toISOString().split("T")[0];
+        return logDate === today;
+    });
 
     const formatDate = (date) => {
         return Intl.DateTimeFormat("ru-RU", {
@@ -38,6 +52,10 @@ export const HabitView = ({ habit, deleteHabit, starHabit, editHabit }) => {
         setShowDeleteModal(false);
     };
 
+    const handleUpdate = async () => {
+        await completeHabit(habit.id);
+    };
+
     const handleToggleStar = async () => await starHabit(habit.id);
 
     return (
@@ -49,23 +67,27 @@ export const HabitView = ({ habit, deleteHabit, starHabit, editHabit }) => {
                 <div className="flex h-full flex-col justify-between items-start gap-1">
                     <p className="mb-auto text-xs font-medium text-indigo-600 underline dark:text-indigo-500">привычка</p>
                     <p className="mb-4">{habit.title}</p>
-                    <p className="text-xs text-gray-900 font-medium">Создано: {formatDate(habit.createdAt)}</p>
+                    <p className="text-xs text-gray-900 font-medium dark:text-gray-300">Создано: {formatDate(habit.createdAt)}</p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
-                    <div className="relative">
-                        <button
-                            ref={checkButtonRef}
-                            className={habitActionButtonClass}
-                            onMouseOver={() => setShowCheckTooltip(true)}
-                            onMouseLeave={() => setShowCheckTooltip(false)}
-                        >
-                            <CheckIcon size={16} />
-                        </button>
-                        <Tooltip targetRef={checkButtonRef} show={showCheckTooltip}>
-                            Отметить привычку как выполненная
-                        </Tooltip>
-                    </div>
+                    {new Date().getDay() === weekday && (
+                        <div className="relative">
+                            <button
+                                ref={checkButtonRef}
+                                className={habitActionButtonClass}
+                                onMouseOver={() => setShowCheckTooltip(true)}
+                                onMouseLeave={() => setShowCheckTooltip(false)}
+                                onClick={handleUpdate}
+                                disabled={todayCompleted}
+                            >
+                                <CheckIcon size={16} />
+                            </button>
+                            <Tooltip targetRef={checkButtonRef} show={showCheckTooltip}>
+                                Отметить привычку как выполненная
+                            </Tooltip>
+                        </div>
+                    )}
 
                     <div className="relative">
                         <button

@@ -27,8 +27,7 @@ const HabitSchema = new mongoose.Schema({
         default: true,
     },
     logs: [{
-        date: { type: Date, required: true },
-        isCompleted: { type: Boolean, default: true }
+        type: Date,
     }],
     isStarred: {
         type: Boolean,

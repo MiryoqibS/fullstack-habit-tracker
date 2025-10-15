@@ -5,7 +5,8 @@ export const HabitsFilter = ({ filter, changeFilter }) => {
     const filterButtonClass = (buttonFilter) => {
         return `
             flex items-center justify-center h-8 w-8 rounded border transition-colors cursor-pointer
-            ${filter === buttonFilter ? "bg-white shadow-lg border-gray-300 text-indigo-700" : "border-gray-400 bg-gray-300"}`;
+            dark:bg-gray-900 dark:border-gray-800
+            ${filter === buttonFilter ? "bg-white shadow-lg border-gray-300 text-indigo-700 dark:text-indigo-400" : "border-gray-400 bg-gray-300"}`;
     };
 
     return (

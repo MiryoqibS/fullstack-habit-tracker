@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../api/axios";
+import { useContext } from "react";
+import { habitsContext } from "../contexts/habitsContext";
 
 export const WeekSlider = () => {
     const [selectedDay, setSelectedDay] = useState(new Date().getDate());
     const [days, setDays] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const { setWeekday } = useContext(habitsContext);
+
+    const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чг", "Пт", "Сб"];
 
     useEffect(() => {
         const fetchDays = async () => {
@@ -35,9 +40,14 @@ export const WeekSlider = () => {
                 return (
                     <button
                         key={day.day}
-                        onClick={() => setSelectedDay(day.day)}
+                        onClick={() => {
+                            setSelectedDay(day.day);
+                            setWeekday(day.weekday);
+                        }}
                         className={`relative w-14 h-14 flex items-center justify-center rounded-full transition
-                            bg-slate-800 text-gray-200 cursor-pointer hover:ring-2 hover:ring-pink-400
+                        bg-gray-300 text-gray-900
+                            dark:bg-slate-800 dark:text-gray-200 cursor-pointer hover:ring-2 hover:ring-pink-400
+                        
                         ${isActive ? "ring-2 ring-pink-500" : "ring-1 ring-gray-600"}    
                         `}
                     >
@@ -68,11 +78,11 @@ export const WeekSlider = () => {
                             </defs>
                         </svg>
                         <div className="z-10 flex flex-col items-center justify-center">
-                            <span className="text-sm font-medium">
+                            <span className="text-lg font-medium">
                                 {day.day}
                             </span>
                             <span className="text-xs">
-                                {day.weekday}
+                                {weekdays[day.weekday]}
                             </span>
                         </div>
                     </button>

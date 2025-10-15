@@ -6,6 +6,7 @@ import { HabitsFilter } from './HabitsFilter';
 
 export const DailyHabits = () => {
     const {
+        weekday,
         getFilteredHabits,
         isLoading,
         setFilter,
@@ -13,6 +14,7 @@ export const DailyHabits = () => {
         handleDeleteHabit,
         handleStarHabit,
         handleUpdateHabit,
+        handleCompleteHabit,
     } = useContext(habitsContext);
     if (isLoading) return <Loader />
 
@@ -29,6 +31,8 @@ export const DailyHabits = () => {
                 deleteHabit={handleDeleteHabit}
                 starHabit={handleStarHabit}
                 updateHabit={handleUpdateHabit}
+                completeHabit={handleCompleteHabit}
+                weekday={weekday}
             />
         </div>
     );

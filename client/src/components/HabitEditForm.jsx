@@ -14,7 +14,7 @@ export const HabitEditForm = ({ habit, updateHabit }) => {
 
     const toggleSelectedDay = (day) => {
         const daysOfWeek = [...editHabit.daysOfWeek];
-        const updatedDaysOfWeek = daysOfWeek.includes(day) ?
+        const updatedDaysOfWeek = daysOfWeek.includes(+day) ?
             daysOfWeek.filter(d => d !== day)
             : [...daysOfWeek, day].sort((a, b) => a - b);
 
@@ -24,13 +24,13 @@ export const HabitEditForm = ({ habit, updateHabit }) => {
     const handleUpdate = async () => await updateHabit(editHabit);
 
     const weekdays = {
-        0: "Пн",
-        1: "Вт",
-        2: "Ср",
-        3: "Чг",
-        4: "Пт",
-        5: "Сб",
-        6: "Вс",
+        1: "Пн",
+        2: "Вт",
+        3: "Ср",
+        4: "Чг",
+        5: "Пт",
+        6: "Сб",
+        0: "Вс",
     };
 
     const saveButtonRef = useRef(null);
@@ -59,7 +59,7 @@ export const HabitEditForm = ({ habit, updateHabit }) => {
                                 onClick={() => toggleSelectedDay(+day)}
                                 className={`flex items-center justify-center w-10 h-10 
                                 p-2 rounded-full aspect-square cursor-pointer transition-colors
-                                border-2bg-gray-300 border-gray-400 hover:bg-gray-400
+                                border-2 bg-gray-300 border-gray-400 hover:bg-gray-400
                                 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-indigo-900/30
                                 ${editHabit.daysOfWeek.includes(+day) ? "bg-indigo-900/30" : "bg-gray-300"}
                                 `}

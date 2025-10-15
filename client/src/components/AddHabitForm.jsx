@@ -18,13 +18,13 @@ export const AddHabitForm = () => {
     };
 
     const days = [
-        { id: 0, label: "Пн" },
-        { id: 1, label: "Вт" },
-        { id: 2, label: "Ср" },
-        { id: 3, label: "Чт" },
-        { id: 4, label: "Пт" },
-        { id: 5, label: "Сб" },
-        { id: 6, label: "Вс" },
+        { id: 1, label: "Пн" },
+        { id: 2, label: "Вт" },
+        { id: 3, label: "Ср" },
+        { id: 4, label: "Чт" },
+        { id: 5, label: "Пт" },
+        { id: 6, label: "Сб" },
+        { id: 0, label: "Вс" },
     ];
 
     const handleSubmit = async (e) => {

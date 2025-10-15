@@ -22,3 +22,5 @@ habitRouter.get("/habits/:id", habitController.getHabitById);
 habitRouter.delete("/habits/:id", habitController.deleteHabit);
 habitRouter.post("/habits/:id/star", habitController.toggleStarHabit);
 habitRouter.put("/habits/:id", habitController.updateHabit);
+habitRouter.get("/habits/day/:weekday", authMiddleware, habitController.getHabitsByWeekday);
+habitRouter.post("/habits/:id/complete", authMiddleware, habitController.completeHabit);
