@@ -102,6 +102,7 @@ export const HabitProvider = ({ children }) => {
 
     return (
         <habitsContext.Provider value={{
+            habits,
             isLoading,
             filter,
             weekday,

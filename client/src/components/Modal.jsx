@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Modal = ({ children, show, onClose }) => {
+export const Modal = ({ children, show, onClose, title = "Модальное окно" }) => {
     if (!show) return null;
 
     return (
@@ -15,7 +15,7 @@ export const Modal = ({ children, show, onClose }) => {
                             p-6 w-full max-w-md relative"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <h3 className="text-lg font-semibold mb-4">Модальное окно</h3>
+                    <h3 className="text-lg font-semibold mb-4">{title}</h3>
                     {children}
 
                     <button

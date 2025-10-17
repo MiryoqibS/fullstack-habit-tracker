@@ -45,7 +45,6 @@ class HabitService {
             const habitsCompleted = logs.filter(
                 log =>
                     new Date(log).toDateString() === day.toDateString()
-                    && log.isCompleted
             ).length;
 
             weekStats.push({
